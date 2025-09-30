@@ -1,0 +1,20 @@
+from flask import Flask, request, jsonify
+import uuid, time
+
+app = Flask(__name__)
+
+@app.route("/v1/message", methods=["POST"])
+def message():
+    payload = request.json
+    session_id = payload.get("session_id") or str(uuid.uuid4())
+    text = payload.get("text","")
+    lang = payload.get("lang", "en")
+    # 1) language detect & intent via local HF (placeholder)
+    # 2) if intent requires verification -> return next steps
+    # 3) else call LLM API (GPT-4/Gemini) with retrieval context
+    # For demo:
+    reply = f"Received your message in {lang}. (This is a stub reply.)"
+    return jsonify({"session_id": session_id, "reply": reply, "timestamp": int(time.time())})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
