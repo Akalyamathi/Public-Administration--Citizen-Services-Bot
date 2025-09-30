@@ -1,0 +1,40 @@
+-- citizens
+CREATE TABLE citizens (
+  id uuid PRIMARY KEY,
+  phone_encrypted bytea,          -- pgcrypto encrypted
+  aadhaar_token_encrypted bytea,  -- pointer/token, not raw aadhaar
+  preferred_language text,
+  consent_version text,
+  created_at timestamptz DEFAULT now()
+);
+
+-- sessions (cache)
+CREATE TABLE sessions (
+  session_id uuid PRIMARY KEY,
+  citizen_id uuid REFERENCES citizens(id),
+  context jsonb,
+  last_active timestamptz
+);
+
+-- tickets (grievance)
+CREATE TABLE tickets (
+  ticket_id uuid PRIMARY KEY,
+  citizen_id uuid REFERENCES citizens(id),
+  department text,
+  subject text,
+  description text,
+  attachments jsonb,
+  status text,
+  assigned_to text,
+  created_at timestamptz DEFAULT now(),
+  sla_deadline timestamptz
+);
+
+-- audit_log (immutable)
+CREATE TABLE audit_log (
+  id bigserial PRIMARY KEY,
+  citizen_id uuid,
+  action text,
+  payload jsonb,
+  created_at timestamptz DEFAULT now()
+);
