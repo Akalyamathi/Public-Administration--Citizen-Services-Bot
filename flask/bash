@@ -1,0 +1,12 @@
+POST /v1/message
+Headers: Authorization: Bearer <JWT>
+Body: { "text": "...", "lang": "hi", "session_id": "..." }
+
+POST /v1/voice
+Body: multipart/form-data audio file, metadata
+
+POST /v1/verify/aadhaar
+Body: { "consent_id": "...", "masked_aadhaar_last4": "1234" }
+
+GET /v1/ticket/{ticket_id}
+POST /v1/ticket  -> create grievance (auto-assign dept)
